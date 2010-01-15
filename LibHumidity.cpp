@@ -33,7 +33,7 @@
 /**********************************************************
  * Initialize the sensor based on the specified type.
  **********************************************************/
-LibHumidity::LibHumidity(uint8_t TempSensorType) {
+LibHumidity::LibHumidity(uint8_t sensorType) {
 
     pinMode(16, OUTPUT);
     digitalWrite(16, LOW);  //GND pin
