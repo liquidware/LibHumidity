@@ -92,8 +92,8 @@ float LibHumidity::GetTemperature(void) {
  *    10 bit       4         6      ms
  *
  *      Measurement time
- *      (max values for -40°C
- *        125°C.)
+ *      (max values for -40Â°C
+ *        125Â°C.)
  *      8 bit 1 3 ms
  *
  **********************************************************/
@@ -120,41 +120,45 @@ uint16_t LibHumidity::readSensor(uint8_t command) {
     }
 
     //Store the result
-    result = ((Wire.receive() >> 2) << 8);
+    result = ((Wire.receive()) << 8);
     result += Wire.receive();
-
+result &= ~0x0003;   // clear two low bits (status bits)
     return result;
 }
 
-float LibHumidity::calculateTemperature(uint16_t analogTempValue) {
+/*float LibHumidity::calculateTemperature(uint16_t analogTempValue) {
 
     float st;
     float r1;
     float r2;
 
-    st = analogTempValue;
+    st = (analogTempValue>>16);
     r1 = (0.011072 * st);
     r2 = (-2.1233E-8 * st * st);
 
     return (-46.8375 + r1 + r2);
+}*/
+
+float LibHumidity::calculateTemperature(uint16_t analogTempValue) {
+
+  float st;
+  float temperatureC;
+
+st = analogTempValue;
+  temperatureC = -46.85 + (175.72/65536.0) * st; //T= -46.85 + 175.72 * ST/2^16
+  return temperatureC;
 }
+
 
 float LibHumidity::calculateHumidity(uint16_t analogHumValue, uint16_t analogTempValue) {
 
-    float st;
-    float sRH;
-    float r1;
-    float r2;
-    float r3;
-    float r4;
+float st = (float)analogTempValue;
+float humidityRH;                       // variable for result
 
-    st = analogTempValue;
-    sRH = analogHumValue;
+//-- calculate relative humidity [%RH] --
 
-    r1 = 3.8219E-2 * sRH;
-    r2 = 2.5329E-4 * st;
-    r3 = -3.6634E-6 * sRH * sRH;
-    r4 = 8.6345E-7 * sRH * st;
-
-    return (-7.7239 + r1 + r2 + r3 + r4);
+ humidityRH = -6.0 + 125.0/65536.0 * st;       // RH= -6 + 125 * SRH/2^16
+ return humidityRH;
 }
+
+
