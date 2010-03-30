@@ -5,6 +5,7 @@
     SHT21-Breakout Module - http://www.moderndevice.com/products/sht21-humidity-sensor
 
   Created by Christopher Ladden at Modern Device on December 2009.
+  modified by Paul Badger March 2010
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
@@ -126,18 +127,6 @@ result &= ~0x0003;   // clear two low bits (status bits)
     return result;
 }
 
-/*float LibHumidity::calculateTemperature(uint16_t analogTempValue) {
-
-    float st;
-    float r1;
-    float r2;
-
-    st = (analogTempValue>>16);
-    r1 = (0.011072 * st);
-    r2 = (-2.1233E-8 * st * st);
-
-    return (-46.8375 + r1 + r2);
-}*/
 
 float LibHumidity::calculateTemperature(uint16_t analogTempValue) {
 
